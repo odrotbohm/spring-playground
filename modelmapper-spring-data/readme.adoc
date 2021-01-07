@@ -1,0 +1,62 @@
+= ModelMapper Spring Data integration
+
+Extension of ModelMapper to automatically map identifiers to aggregate instances using Spring Data repositories to look up aggregate instances.
+
+[source, java]
+----
+// Some aggregate plus a repository
+class SomeAggregateRoot { }
+
+interface SomeRepository extends CrudRepository<AggregateRoot, UUID> { }
+
+// Some DTO to bind request payloads to
+class SomeDTO {
+  UUID aggregate;
+}
+
+// Some domain object referring to aggregates
+class SomeDomainType {
+  SomeAggregateRoot aggregate;
+}
+----
+
+The `AggregateMappingModule` will enable mapping `SomeDTO` to `SomeDomainType` and vice versa:
+
+* The to-aggregate resolution will convert the incoming identifier to the id type of the aggregate and use the repository to look up the aggregate instance.
+* The to-identifier mapping will extract the identifier from the aggregate instance.
+
+The `AggregateIdentifierProcessor` SPI allows to pre- and post-process the identifier values.
+For example, `UriTemplateIdentifierProcessor` allows to easily map the identifiers from and to URIs:
+
+[source, java]
+----
+class SomeDTO {
+  URI aggregate;
+}
+
+@Configuration
+class SomeConfiguration {
+
+  @Bean UriTemplateIdentifierProcessor uriProcessor() {
+    return new UriTemplateIdentifierProcessor(SomeAggregate.class, "/path/{id}");
+  }
+}
+----
+
+Given that setup, the following JSON would map `aggregate` in the DTO to the aggregate in the target instance with the identifier `9ebd9beb-5af6-4c69-9b79-f04b472d1bec` extracted and converted into the aggregates identifier type in turn.
+
+[source, json]
+----
+{
+  "aggregate" : "/path/9ebd9beb-5af6-4c69-9b79-f04b472d1bec"
+}
+----
+
+== Spring Boot auto-configuration
+
+There's Spring Boot auto-configuration will register the following beans:
+
+* A `ModelMapper` instance (unless one is already present) collecting all `Module` beans declared in the `ApplicationContext` and registering them with the mapper.
+* The `AggregateMappingModule` if Spring Data is on the classpath and no instance of that is already present in the `ApplicationContext`.
+All `IdentifierProcessor` instances available in the context will be registered.
+The prepared module instance can be customized by registering `AggregateMppingConfigurer` beans.
