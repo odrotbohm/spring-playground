@@ -19,10 +19,10 @@ Controller implementation that receive a request payload usually follow a pretty
 class MyController {
 
   private final SomeRepository repository;
-  
+
   @PutMapping("/payload/{id}")
   HttpEntity<?> putPayload(
-    @PathVariable Long id, 
+    @PathVariable Long id,
     @Valid @RequestBody Something something,
     Errors errors) {
 
@@ -49,6 +49,8 @@ Additional overloads exist that also receive the `Errors` instance so that addit
 If the instance is in absent mode, a `404 Not found` will be rendered, customizable via `….onAbsence(…)`.
 If errors have been accumulated, a default `400 Bad Request` will be produced to contain the `Errors` instance as payload (see <<errors>> for how that is handled).
 `….onErrors(…)` can be used to customize the error response.
+
+image::docs/images/mapped-payload.svg[]
 
 [[errors]]
 == Serializing Error instances
