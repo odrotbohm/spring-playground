@@ -15,6 +15,7 @@
  */
 package de.odrotbohm.spring.web.model;
 
+import de.odrotbohm.spring.web.validation.YaviValidator;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 
 /**
  * A monadic type to implement Spring MVC handler methods in a functional way.
@@ -387,6 +389,24 @@ public interface MappedPayloads {
 
 			if (payload != null) {
 				consumer.accept(payload, errors);
+			}
+
+			return this;
+		}
+
+		/**
+		 * Syntactic sugar to invoke validations in a readable way. Essentially the same as {@link #peek(BiConsumer)}.
+		 * Easy to use with Spring's own {@link Validator} interface or the YAVI {@link YaviValidator} adapter.
+		 *
+		 * @param validator must not be {@literal null}.
+		 * @return
+		 */
+		public MappedPayload<T> validate(BiConsumer<? super T, Errors> validator) {
+
+			Assert.notNull(validator, "Validator must not be null!");
+
+			if (payload != null) {
+				validator.accept(payload, errors);
 			}
 
 			return this;
