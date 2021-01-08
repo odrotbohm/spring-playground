@@ -16,21 +16,24 @@ Controller implementation that receive a request payload usually follow a pretty
 [source, java]
 ----
 @RestController
+@RequiredArgsController
 class MyController {
 
   private final SomeRepository repository;
+  private final YaviValidator<Something> validator;
 
   @PutMapping("/payload/{id}")
   HttpEntity<?> putPayload(
     @PathVariable Long id,
-    @Valid @RequestBody Something something,
+    @RequestBody Something something,
     Errors errors) {
 
     return MappedPayload.of(something, errors)
       .notFoundIf(repository.exists(id)) // End up with a 404 if true
+      .validate(validator) // Invoke validation
       .rejectField(…) // reject fields based on conditions
-      .alwaysMap(it -> …) // *always* invoke business method
-      .map(it -> …) // invoke business method if no errors have occured yet
+      .map(it -> …) // *always* invoke business method
+      .mapIfValid(it -> …) // invoke business method if no errors have occured yet
       .concludeIfValid(it -> ); // Create an HTTP response using the current payload
   }
 }
@@ -40,6 +43,7 @@ The example above will do the following:
 
 * It will immediately flip into absent mode and will eventually produce a 404 response if the repository lookup returns `false`.
 The 404 response can be customized by registering an absence handler using `….onAbsence(…)`.
+* Invoke validation explicitly, in this case using the https://github.com/making/yavi[YAVI validation library].
 * There is API to reject fields unconditionally or based on `boolean` expressions and ``Predicate``s.
 * Unless we deal with absence, the handler in `….alwaysMap(…)` will be invoked.
 All methods starting with `always` will be invoked, regardless of whether errors have accumulated until they're called.

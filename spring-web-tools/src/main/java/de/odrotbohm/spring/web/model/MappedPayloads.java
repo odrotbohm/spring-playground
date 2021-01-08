@@ -343,7 +343,7 @@ public interface MappedPayloads {
 		 * @param consumer must not be {@literal null}.
 		 * @return the current instance, never {@literal null}.
 		 */
-		public MappedPayload<T> peek(Consumer<? super T> consumer) {
+		public MappedPayload<T> peekIfValid(Consumer<? super T> consumer) {
 
 			Assert.notNull(consumer, "Consumer must not be null!");
 
@@ -361,7 +361,7 @@ public interface MappedPayloads {
 		 * @param consumer
 		 * @return the current instance, never {@literal null}.
 		 */
-		public MappedPayload<T> peek(BiConsumer<? super T, Errors> consumer) {
+		public MappedPayload<T> peekIfValid(BiConsumer<? super T, Errors> consumer) {
 
 			Assert.notNull(consumer, "Consumer must not be null!");
 
@@ -372,7 +372,7 @@ public interface MappedPayloads {
 			return this;
 		}
 
-		public MappedPayload<T> alwaysPeek(Consumer<? super T> consumer) {
+		public MappedPayload<T> peek(Consumer<? super T> consumer) {
 
 			Assert.notNull(consumer, "Consumer must not be null!");
 
@@ -383,7 +383,7 @@ public interface MappedPayloads {
 			return this;
 		}
 
-		public MappedPayload<T> alwaysPeek(BiConsumer<? super T, Errors> consumer) {
+		public MappedPayload<T> peek(BiConsumer<? super T, Errors> consumer) {
 
 			Assert.notNull(consumer, "Consumer must not be null!");
 
@@ -420,7 +420,7 @@ public interface MappedPayloads {
 		 * @return will never be {@literal null}.
 		 */
 		@SuppressWarnings("unchecked")
-		public <S> MappedPayload<S> alwaysMap(Function<? super T, S> mapper) {
+		public <S> MappedPayload<S> map(Function<? super T, S> mapper) {
 
 			Assert.notNull(mapper, "Mapper must not be null!");
 
@@ -428,7 +428,7 @@ public interface MappedPayloads {
 		}
 
 		@SuppressWarnings("unchecked")
-		public <S> MappedPayload<S> alwaysFlatMap(Function<? super T, Optional<S>> mapper) {
+		public <S> MappedPayload<S> flatMap(Function<? super T, Optional<S>> mapper) {
 
 			Assert.notNull(mapper, "Mapper must not be null!");
 
@@ -446,7 +446,7 @@ public interface MappedPayloads {
 		 * @return
 		 */
 		@SuppressWarnings("unchecked")
-		public <S> MappedPayload<S> map(Function<? super T, S> mapper) {
+		public <S> MappedPayload<S> mapIfValid(Function<? super T, S> mapper) {
 
 			Assert.notNull(mapper, "Mapper must not be null!");
 
@@ -456,7 +456,7 @@ public interface MappedPayloads {
 		}
 
 		@SuppressWarnings("unchecked")
-		public <S> MappedPayload<S> flatMap(Function<? super T, Optional<S>> mapper) {
+		public <S> MappedPayload<S> flatMapIfValid(Function<? super T, Optional<S>> mapper) {
 
 			Assert.notNull(mapper, "Mapper must not be null!");
 
@@ -467,12 +467,12 @@ public interface MappedPayloads {
 							.orElseGet(this::withoutPayload);
 		}
 
-		public <S> MappedPayload<S> alwaysMap(BiFunction<? super T, Errors, S> mapper) {
+		public <S> MappedPayload<S> map(BiFunction<? super T, Errors, S> mapper) {
 			return withPayload(mapper.apply(payload, errors));
 		}
 
 		@SuppressWarnings("unchecked")
-		public <S> MappedPayload<S> map(BiFunction<? super T, Errors, S> mapper) {
+		public <S> MappedPayload<S> mapIfValid(BiFunction<? super T, Errors, S> mapper) {
 
 			return errors.hasErrors() || payload == null
 					? (MappedPayload<S>) this

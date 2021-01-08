@@ -50,7 +50,7 @@ import org.springframework.validation.Errors;
  * @author Oliver Drotbohm
  */
 @ExtendWith(MockitoExtension.class)
-public class MappedPayloadsUnitTests {
+class MappedPayloadsUnitTests {
 
 	@Mock Errors errors;
 
@@ -106,27 +106,27 @@ public class MappedPayloadsUnitTests {
 		when(flatFunction.apply(any())).then(it -> Optional.of(it.getArgument(0)));
 
 		MappedPayload<Payload> payload = createPayload(new Payload())
-				.map(function)
-				.map(biFunction)
-				.flatMap(flatFunction);
+				.mapIfValid(function)
+				.mapIfValid(biFunction)
+				.flatMapIfValid(flatFunction);
 
 		verify(function, times(1)).apply(any());
 		verify(biFunction, times(1)).apply(any(), any());
 		verify(flatFunction, times(1)).apply(any());
 
 		payload = payload.rejectField("someField", "error.code")
-				.map(function)
-				.map(biFunction)
-				.flatMap(flatFunction);
+				.mapIfValid(function)
+				.mapIfValid(biFunction)
+				.flatMapIfValid(flatFunction);
 
 		verify(function, times(1)).apply(any());
 		verify(biFunction, times(1)).apply(any(), any());
 		verify(flatFunction, times(1)).apply(any());
 
 		payload = payload
-				.alwaysMap(function)
-				.alwaysMap(biFunction)
-				.alwaysFlatMap(flatFunction);
+				.map(function)
+				.map(biFunction)
+				.flatMap(flatFunction);
 
 		verify(function, times(2)).apply(any());
 		verify(biFunction, times(2)).apply(any(), any());
@@ -140,7 +140,7 @@ public class MappedPayloadsUnitTests {
 		Function<Payload, Payload> expected = mock(Function.class);
 
 		createPayload(new Payload())
-				.map(expected)
+				.mapIfValid(expected)
 				.concludeWithoutContent();
 
 		verify(expected, times(1)).apply(any());
@@ -246,21 +246,21 @@ public class MappedPayloadsUnitTests {
 		BiConsumer<? super Payload, Errors> biConsumer = mock(BiConsumer.class);
 
 		MappedPayload<Payload> payload = createPayload(new Payload())
-				.peek(consumer)
-				.peek(biConsumer);
+				.peekIfValid(consumer)
+				.peekIfValid(biConsumer);
 
 		verify(consumer, times(1)).accept(any());
 		verify(biConsumer, times(1)).accept(any(), any());
 
 		payload = payload.rejectField("someField", "error.code")
-				.peek(consumer)
-				.peek(biConsumer);
+				.peekIfValid(consumer)
+				.peekIfValid(biConsumer);
 
 		verify(consumer, times(1)).accept(any());
 		verify(biConsumer, times(1)).accept(any(), any());
 
-		payload.alwaysPeek(consumer)
-				.alwaysPeek(biConsumer);
+		payload.peek(consumer)
+				.peek(biConsumer);
 
 		verify(consumer, times(2)).accept(any());
 		verify(biConsumer, times(2)).accept(any(), any());
