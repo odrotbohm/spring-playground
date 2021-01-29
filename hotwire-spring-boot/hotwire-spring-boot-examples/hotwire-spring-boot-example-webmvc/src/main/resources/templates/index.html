@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="${lang}"
+      xmlns="http://www.w3.org/1999/xhtml"
+      data-th-lang="${lang}" data-th-with="lang=${#locale.language}">
+<head data-th-replace="~{fragments/head :: html-head}"></head>
+<head>
+    <title>Home</title>
+    <script type="text/javascript">
+        if (window["EventSource"] && window["Turbo"]) {
+            Turbo.connectStreamSource(new EventSource("/stream"));
+        } else {
+            console.warn("Turbo Streams over SSE not available");
+        }
+    </script>
+</head>
+<section>
+    <h1>Pings section</h1>
+    <h2>Regular Form</h2>
+    <form action="/" data-turbo="false" method="post">
+        <button type="submit">Ping</button>
+    </form>
+    <h2>Turbo Stream (Form)</h2>
+    <form action="/" method="post">
+        <button type="submit">Ping</button>
+    </form>
+    <div>
+        <p>Ping times</p>
+        <ol id="pings">
+            <li data-th-fragment="ping" data-th-each="time : ${times}">[[${time}]]</li>
+        </ol>
+    </div>
+</section>
+<section>
+    <h1>Load section</h1>
+    <h2>Turbo Stream (SSE)</h2>
+    <div>
+        <p>System Load Average</p>
+        <span id="load" data-th-fragment="load" data-th-text="${time}">waiting...</span>
+    </div>
+</section>
+</body>
+</html>

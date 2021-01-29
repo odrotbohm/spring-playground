@@ -5,7 +5,8 @@ Currently starring:
 
 * https://github.com/modelmapper/modelmapper[Modelmapper] Spring Data integration -- enables the lookup of Spring Data repository managed aggregates from DTOs during object mapping.
 Also contains Spring Boot auto-configuration.
-* `spring-web-tools` -- containing a monadic API to implement controller methods.
+* link:spring-web-tools[`spring-web-tools`] -- containing a monadic API to implement controller methods.
 Also, helpers to serialize `Errors` instances as JSON easily.
+* link:hotwire-spring-boot[Hotwire Spring Boot integration] -- API to conveniently create Turbo Stream representations from Spring MVC controllers.
 
 More to come.

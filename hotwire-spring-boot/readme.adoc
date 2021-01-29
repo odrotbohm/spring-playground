@@ -1,0 +1,144 @@
+= Spring Boot Hotwire integration
+
+https://hotwire.dev/[Hotwire] can be used just fine with Spring Boot out of the box.
+However, as a couple of <<references, examples>> have shown, it usually requires a bit of boilerplate code to be written on the server side.
+This library attempts to remove that boilerplate code by providing a few Spring MVC extensions that make it easy to use Thymeleaf templates and template fragments as Turbo Streams.
+
+[[features]]
+== Features
+
+* Conveniently bundles the Hotwire WebJAR.
+* API to logically define Turbo Streams in WebMVC controllers.
+* Spring Boot auto configuration to set up Spring MVC to automatically render `TurboStreams` instances as Thymeleaf templates and fragments.
+* A `Hotwire` instance available as bean or controller method argument to actively render `TurboStreams` instances in SSE compatible format.
+
+An example project can be found link:hotwire-spring-boot-examples/hotwire-spring-boot-example-webmvc[here].
+
+[[quickstart]]
+== Quickstart
+
+Add the library to your Spring MVC application:
+
+[source, xml]
+----
+<dependencies>
+  <dependency>
+    <groupId>de.odrotbohm.playground</groupId>
+    <artifactId>hotwire-spring-boot</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  <dependency>
+</dependencies>
+
+<!-- For snapshot access -->
+
+<repositories>
+  <repository>
+    <id>spring-snapshots</id>
+    <url>https://repo.spring.io/snapshot</url>
+  </repository>
+</repositories>
+----
+
+If you haven't already, please make sure you also have the Spring Boot web starter included.
+
+[source, java]
+----
+@PostMapping(path = "/", produces = Hotwire.TURBO_STREAM_VALUE)
+TurboStreams indexStream(Model model) {
+
+  // times is a List<Long> System.currentTimeMillis() as elements.
+  model.addAttribute("times", Arrays.asList(now()));
+
+  return new TurboStreams()
+    .append("pings").with("index :: ping");
+}
+----
+
+Note, how we return an instance of `TurboStreams` instance that allows us to logically define which streams we want to set up.
+In this particular case we define exactly one stream but could accumulate more as well to update other parts of the page.
+Read more on Turbo Streams in general https://turbo.hotwire.dev/handbook/streams[here].
+Spring MVC will render those in the format expected resolving the given Thymeleaf template or template fragment reference as actual payload.
+I.e. a template snippet like this:
+
+[source, html]
+----
+<div>
+  <p>Ping times</p>
+  <ol id="pings">
+    <li data-th-fragment="ping" data-th-each="time : ${times}">[[${time}]]</li>
+  </ol>
+</div>
+----
+
+the response would look like this:
+
+[source, xml]
+----
+<turbo-stream action="append" target="pings">
+  <template>
+    <li>123456789</li>
+  </template>
+</turbo-stream>
+----
+
+[[sse-websocket]]
+== SSE / WebSocket support
+
+The primary support for streaming events consists of API to easily produce the representations expected by Hotwire.
+
+[source, java]
+----
+@Controller
+@RequiredArgsConstructor
+class SseController {
+
+  private final Hotwire hotwire; <4>
+  private SseEmitter emitter;
+
+  @GetMapping(path = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+  SseEmitter indexSse(Model model) { <1>
+
+    this.emitter = new SseEmitter();
+    this.emitter.onCompletion(() -> this.emitter = null);
+
+    return emitter;
+  }
+
+  @Scheduled(fixedRate = 2000)
+  void pushEvent() throws IOException { <2>
+
+    if (emitter == null) {
+      return;
+    }
+
+    Map<String, Object> model = new HashMap<>();
+    model.put("time", System.currentTimeMillis());
+
+    TurboStreams streams = new TurboStreams() <3>
+        .replace("load").with("index :: load");
+
+    emitter.send(hotwire.toSsePayload(streams, model)); <4>
+  }
+}
+----
+<1> An initial request is setting up an `SseEmitter` for later use.
+<2> A scheduled method to produce events every 2 seconds.
+<3> Use of the `TurboStreams` API to define the streams to be sent to the client.
+<4> Use of the `Hotwire` bean available to render the `TurboStreams` as SSE compatible payload.
+
+[[ideas]]
+== Still open / ideas
+
+* Dedicated WebFlux support?
+* Improve the translation of `TurboStreams` into a `View`.
+We currently use a `HandlerInterceptor` but that has to guess about the case it is supposed to kick in quite a bit.
+A `HandlerMethodReturnValueHandler` looks like a better alternative.
+However, decorating the existing list of them is rather cumbersome: post process all `RequestMappingHandlerAdapters`, wrap the ones contained in the adapter in a `HandlerMethodReturnValueHandlerComposite`, decorate that and set that back on the `RMHA`.
+* Anything else? Please file an issue!
+
+[[references]]
+== Contributors and references
+
+* https://hotwire.dev/[Hotwire]
+* A https://delitescere.medium.com/hotwire-html-over-the-wire-2c733487268c[blog post] by https://twitter.com/delitescere[Josh Graham] (https://github.com/delitescere/hotwire-samples[sample code]) focussing on the use within WebFlux and Kotlin. 
+* https://github.com/innoq/hotwire-demo[Hotwire Demo] -- by Joachim Praetorius and Tobias Erdle of https://www.innoq.com/en/[INNOQ]

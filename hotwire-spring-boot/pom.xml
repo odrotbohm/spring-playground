@@ -1,0 +1,43 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<packaging>pom</packaging>
+
+	<artifactId>hotwire-spring-boot-parent</artifactId>
+	<name>Hotwire Spring Boot - Parent</name>
+
+	<parent>
+		<groupId>de.odrotbohm.playground</groupId>
+		<artifactId>spring-playground</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<modules>
+		<module>hotwire-spring-boot</module>
+		<module>hotwire-spring-boot-examples</module>
+	</modules>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>webjars-locator-core</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.webjars.npm</groupId>
+			<artifactId>hotwired__turbo</artifactId>
+			<version>7.0.0-beta.3</version>
+		</dependency>
+
+	</dependencies>
+
+</project>
