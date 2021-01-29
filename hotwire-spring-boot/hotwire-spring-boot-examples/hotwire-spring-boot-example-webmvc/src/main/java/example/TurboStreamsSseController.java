@@ -15,7 +15,7 @@
  */
 package example;
 
-import de.odrotbohm.spring.hotwire.webmvc.Hotwire;
+import de.odrotbohm.spring.hotwire.webmvc.HotwireEvents;
 import de.odrotbohm.spring.hotwire.webmvc.TurboStreams;
 import lombok.RequiredArgsConstructor;
 
@@ -26,7 +26,6 @@ import java.util.Map;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -37,26 +36,17 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
  */
 @Controller
 @RequiredArgsConstructor
-class SseController {
+class TurboStreamsSseController {
 
-	private final Hotwire hotwire;
-	private SseEmitter emitter;
+	private final HotwireEvents events;
 
 	@GetMapping(path = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-	SseEmitter indexSse(Model model) {
-
-		this.emitter = new SseEmitter();
-		this.emitter.onCompletion(() -> this.emitter = null);
-
-		return emitter;
+	SseEmitter indexSse() {
+		return events.initStream();
 	}
 
 	@Scheduled(fixedRate = 2000)
 	void pushEvent() throws IOException {
-
-		if (emitter == null) {
-			return;
-		}
 
 		Map<String, Object> model = new HashMap<>();
 		model.put("time", System.currentTimeMillis());
@@ -64,6 +54,6 @@ class SseController {
 		TurboStreams streams = new TurboStreams()
 				.replace("load").with("index :: load");
 
-		emitter.send(hotwire.toSsePayload(streams, model));
+		events.push(streams, model);
 	}
 }

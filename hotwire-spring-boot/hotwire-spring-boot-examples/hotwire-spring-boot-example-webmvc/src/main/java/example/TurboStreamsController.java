@@ -32,9 +32,9 @@ import org.springframework.web.bind.annotation.PostMapping;
  * @author Oliver Drotbohm
  */
 @Controller
-public class TurboStreamsController {
+class TurboStreamsController {
 
-	private List<Long> times = new ArrayList<>();
+	private final List<Long> times = new ArrayList<>();
 
 	@GetMapping(path = "/")
 	String index(Model model) {

@@ -82,7 +82,7 @@ the response would look like this:
 ----
 
 [[sse-websocket]]
-== SSE / WebSocket support
+== Server-Sent Events support
 
 The primary support for streaming events consists of API to easily produce the representations expected by Hotwire.
 
@@ -90,41 +90,33 @@ The primary support for streaming events consists of API to easily produce the r
 ----
 @Controller
 @RequiredArgsConstructor
-class SseController {
+class TurboStreamsSseController {
 
-  private final Hotwire hotwire; <4>
-  private SseEmitter emitter;
+  private final HotwireEvents events; <1>
 
   @GetMapping(path = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-  SseEmitter indexSse(Model model) { <1>
-
-    this.emitter = new SseEmitter();
-    this.emitter.onCompletion(() -> this.emitter = null);
-
-    return emitter;
+  SseEmitter indexSse() {
+    return events.initStream(); <2>
   }
 
   @Scheduled(fixedRate = 2000)
-  void pushEvent() throws IOException { <2>
-
-    if (emitter == null) {
-      return;
-    }
+  void pushEvent() throws IOException {
 
     Map<String, Object> model = new HashMap<>();
     model.put("time", System.currentTimeMillis());
 
-    TurboStreams streams = new TurboStreams() <3>
-        .replace("load").with("index :: load");
+    TurboStreams streams = new TurboStreams()
+        .replace("load").with("index :: load"); <3>
 
-    emitter.send(hotwire.toSsePayload(streams, model)); <4>
+    events.push(streams, model); <4>
   }
 }
 ----
-<1> An initial request is setting up an `SseEmitter` for later use.
-<2> A scheduled method to produce events every 2 seconds.
+<1> Inject `HotwireEvents`. This is a prototype scope bean available in the application context.
+<2> Initialize an event stream.
+They can be named explicitly in case a controller wants to produce multiple ones. 
 <3> Use of the `TurboStreams` API to define the streams to be sent to the client.
-<4> Use of the `Hotwire` bean available to render the `TurboStreams` as SSE compatible payload.
+<4> Push the `TurboStreams` to the stream (here: the one with the default name).
 
 [[ideas]]
 == Still open / ideas

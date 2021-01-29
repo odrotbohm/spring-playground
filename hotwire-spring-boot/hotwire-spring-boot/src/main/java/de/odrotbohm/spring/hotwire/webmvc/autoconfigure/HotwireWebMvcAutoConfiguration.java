@@ -16,6 +16,7 @@
 package de.odrotbohm.spring.hotwire.webmvc.autoconfigure;
 
 import de.odrotbohm.spring.hotwire.webmvc.Hotwire;
+import de.odrotbohm.spring.hotwire.webmvc.HotwireEvents;
 import de.odrotbohm.spring.hotwire.webmvc.WebMvcHotwire;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,11 @@ class HotwireWebMvcAutoConfiguration implements WebMvcConfigurer {
 	@Bean
 	Hotwire hotwire() {
 		return new WebMvcHotwire(resolver, engine, locales.getObject());
+	}
+
+	@Bean
+	HotwireEvents hotwireEvents(Hotwire hotwire) {
+		return new HotwireEvents(hotwire);
 	}
 
 	/*
