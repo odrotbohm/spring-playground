@@ -114,7 +114,7 @@ public class WebMvcHotwire implements Hotwire {
 
 				builder.append(it.openTemplate());
 				builder.append(engine.process(spec, context).replaceAll("\n", ""));
-				builder.append(it.closeStream());
+				builder.append(it.closeTemplate());
 			}
 
 			builder.append(it.closeStream());
