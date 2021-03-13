@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import de.odrotbohm.spring.hotwire.webmvc.annotation.TurboStreamPostMapping;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -54,7 +55,7 @@ class TurboStreamsController {
 		return "index";
 	}
 
-	@PostMapping(path = "/", produces = Hotwire.TURBO_STREAM_VALUE)
+	@TurboStreamPostMapping(path = "/")
 	TurboStreams indexStream(Model model) {
 
 		model.addAttribute("times", Arrays.asList(now()));
