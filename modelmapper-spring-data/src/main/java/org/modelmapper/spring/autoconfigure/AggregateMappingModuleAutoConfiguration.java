@@ -21,6 +21,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.spring.data.AggregateIdentifierProcessor;
 import org.modelmapper.spring.data.AggregateMappingConfigurer;
 import org.modelmapper.spring.data.AggregateMappingModule;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -39,12 +40,13 @@ class AggregateMappingModuleAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	AggregateMappingModule repositoryMappingModule(ApplicationContext context, ConversionService conversionService,
+	AggregateMappingModule repositoryMappingModule(ApplicationContext context,
+			ObjectProvider<ConversionService> conversionService,
 			List<AggregateIdentifierProcessor> processors, List<AggregateMappingConfigurer> configurers) {
 
 		Repositories repositories = new Repositories(context);
-
-		AggregateMappingModule module = new AggregateMappingModule(repositories, conversionService);
+		AggregateMappingModule module = new AggregateMappingModule(repositories,
+				conversionService.getIfUnique(() -> context.getBean("mvcConversionService", ConversionService.class)));
 
 		processors.forEach(module::register);
 		configurers.forEach(it -> it.configure(module));
