@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-de.odrotbohm.spring.web.autoconfiguration.YaviValidatorAutoConfiguration
+de.odrotbohm.spring.web.autoconfigure.YaviValidatorAutoConfiguration

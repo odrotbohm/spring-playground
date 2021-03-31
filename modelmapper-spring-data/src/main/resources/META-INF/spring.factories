@@ -1,3 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 org.modelmapper.spring.autoconfigure.ModelMapperAutoConfiguration,\
-org.modelmapper.spring.autoconfigure.AggregateMappingModuleeAutoConfiguration
+org.modelmapper.spring.autoconfigure.AggregateMappingModuleAutoConfiguration
