@@ -29,7 +29,7 @@ class MyController {
     Errors errors) {
 
     return MappedPayload.of(something, errors)
-      .notFoundIf(repository.exists(id)) // End up with a 404 if true
+      .notFoundIf(!repository.exists(id)) // End up with a 404 if true (see graphic below)
       .validate(validator) // Invoke validation
       .rejectField(…) // reject fields based on conditions
       .map(it -> …) // *always* invoke business method
@@ -45,9 +45,8 @@ The example above will do the following:
 The 404 response can be customized by registering an absence handler using `….onAbsence(…)`.
 * Invoke validation explicitly, in this case using the https://github.com/making/yavi[YAVI validation library].
 * There is API to reject fields unconditionally or based on `boolean` expressions and ``Predicate``s.
-* Unless we deal with absence, the handler in `….alwaysMap(…)` will be invoked.
-All methods starting with `always` will be invoked, regardless of whether errors have accumulated until they're called.
-* The handler passed to the `….map(…)` method, will only be invoked, if no errors have been accumulated yet.
+* Unless we deal with absence, the handler in `….map(…)` will be invoked.
+* The handler passed to the `….mapIfValid(…)` method, will only be invoked, if no errors have been accumulated yet.
 Additional overloads exist that also receive the `Errors` instance so that additional errors can be registered manually.
 * `….concludeIfValid(…)` is the terminating method to produce the success response if no errors have been accumulated until the call.
 If the instance is in absent mode, a `404 Not found` will be rendered, customizable via `….onAbsence(…)`.
