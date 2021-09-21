@@ -15,6 +15,7 @@
 
 	<modules>
 		<module>hotwire-spring-boot-example-webmvc</module>
+		<module>hotwire-spring-boot-example-todomvc</module>
 	</modules>
 
 	<dependencies>

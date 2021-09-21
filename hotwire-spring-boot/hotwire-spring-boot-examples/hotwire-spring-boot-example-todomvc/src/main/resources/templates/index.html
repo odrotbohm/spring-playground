@@ -1,0 +1,81 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Template • TodoMVC</title>
+		<link rel="stylesheet" th:href="@{/webjars/todomvc-common/base.css}">
+		<link rel="stylesheet" th:href="@{/webjars/todomvc-app-css/index.css}">
+	</head>
+	<body>
+		<section class="todoapp">
+			<header class="header">
+				<h1>todos</h1>
+				<form th:action="@{/}" method="post" th:object="${item}" data-turbo-frame="todos">
+					<input class="new-todo" placeholder="What needs to be done?" th:field="*{title}" autofocus>
+				</form>
+			</header>
+			<!-- This section should be hidden by default and shown when there are todos -->
+			<section class="main">
+				<input id="toggle-all" class="toggle-all" type="checkbox">
+				<label for="toggle-all">Mark all as complete</label>
+				<turbo-frame id="todos" th:fragment="todos">
+					<ul class="todo-list" th:remove="all-but-first" >
+						<!-- These are here just to show the structure of the list items -->
+						<!-- List items should get the class `editing` when editing and `completed` when marked as completed -->
+						<li th:insert="fragments :: todoItem(${item})" th:each="item : ${todos}" th:remove="tag">
+						</li>
+						<li class="completed">
+							<div class="view">
+								<input class="toggle" type="checkbox" checked>
+								<label>Taste JavaScript</label>
+								<button class="destroy"></button>
+							</div>
+							<input class="edit" value="Create a TodoMVC template">
+						</li>
+						<li>
+							<div class="view">
+								<input class="toggle" type="checkbox">
+								<label>Buy a unicorn</label>
+								<button class="destroy"></button>
+							</div>
+							<input class="edit" value="Rule the web">
+						</li>
+					</ul>
+				</turbo-frame>
+			</section>
+			<!-- This footer should be hidden by default and shown when there are todos -->
+			<turbo-frame id="footer">
+				<footer class="footer" th:if="${todos.size() > 0}">
+					<!-- This should be `0 items left` by default -->
+					<span class="todo-count"><strong>0</strong> item left</span>
+					<!-- Remove this if you don't implement routing -->
+					<ul class="filters">
+						<li>
+							<a class="selected" href="#/">All</a>
+						</li>
+						<li>
+							<a href="#/active">Active</a>
+						</li>
+						<li>
+							<a href="#/completed">Completed</a>
+						</li>
+					</ul>
+					<!-- Hidden if no completed items are left ↓ -->
+					<button class="clear-completed">Clear completed</button>
+				</footer>
+			</turbo-frame>
+
+		</section>
+		<footer class="info">
+			<p>Double-click to edit a todo</p>
+			<!-- Remove the below line ↓ -->
+			<p>Template by <a href="http://sindresorhus.com">Sindre Sorhus</a></p>
+			<!-- Change this out with your name and url ↓ -->
+			<p>Created by <a href="http://todomvc.com">you</a></p>
+			<p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+		</footer>
+		<script th:src="@{/webjars/todomvc-common/base.js}"></script>
+		<script th:src="@{/webjars/hotwired__turbo/dist/turbo.es5-umd.js}"></script>
+	</body>
+</html>
