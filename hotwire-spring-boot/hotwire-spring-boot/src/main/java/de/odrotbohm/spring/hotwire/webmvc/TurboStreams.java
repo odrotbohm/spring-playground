@@ -24,10 +24,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
-import org.springframework.boot.autoconfigure.web.servlet.WebMvcProperties.View;
+import org.springframework.util.Assert;
 
 /**
- * A {@link View} that renders all accumulated turbo streams.
+ * Representation of Turbo Streams.
  *
  * @author Oliver Drotbohm
  */
@@ -121,11 +121,38 @@ public class TurboStreams {
 		private Action action;
 
 		/**
-		 * @param target
-		 * @return
+		 * @param templateOrFragment the identifier of a template or fragment.
+		 * @return will never be {@literal null}.
 		 */
-		public TurboStreams with(String template) {
-			return and(new TurboStream(action, target, template));
+		public TurboStreams with(String templateOrFragment) {
+			return and(new TurboStream(action, target, templateOrFragment));
+		}
+
+		/**
+		 * Renders the fragment with the current target name within the given template.
+		 *
+		 * @param template must not be {@literal null} or empty.
+		 * @return will never be {@literal null}.
+		 */
+		public TurboStreams withinTemplate(String template) {
+
+			Assert.hasText(template, "Template name must not be null or empty!");
+
+			return and(new TurboStream(action, target, template.concat(" :: ".concat(target))));
+		}
+
+		/**
+		 * Renders the given fragment as Turbo Stream.
+		 *
+		 * @param fragment must not be {@literal null} or empty and a valid fragment identifier.
+		 * @return will never be {@literal null}.
+		 */
+		public TurboStreams withFragment(String fragment) {
+
+			Assert.hasText(fragment, "Fragment must not be null or empty!");
+			Assert.isTrue(fragment.contains("::"), () -> "Invalid fragment identifier " + fragment + "!");
+
+			return and(new TurboStream(action, target, fragment));
 		}
 
 		private TurboStreams and(TurboStream stream) {
