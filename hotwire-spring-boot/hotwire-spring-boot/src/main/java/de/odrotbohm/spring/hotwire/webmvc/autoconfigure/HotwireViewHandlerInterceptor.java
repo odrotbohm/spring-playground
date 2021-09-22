@@ -30,6 +30,8 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 /**
+ * A {@link HandlerInterceptor} that turns {@link TurboStreams} instances returned from controller methods into a
+ *
  * @author Oliver Drotbohm
  */
 @RequiredArgsConstructor

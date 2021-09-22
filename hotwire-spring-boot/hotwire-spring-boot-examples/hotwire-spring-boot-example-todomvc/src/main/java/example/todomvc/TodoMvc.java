@@ -27,6 +27,11 @@ import org.springframework.data.map.repository.config.EnableMapRepositories;
 public class TodoMvc {
 
 	public static void main(String[] args) throws Exception {
-		SpringApplication.run(TodoMvc.class, args);
+
+		var context = SpringApplication.run(TodoMvc.class, args);
+		var repository = context.getBean(TodoItemRepository.class);
+
+		repository.save(new TodoItem("Completed").complete());
+		repository.save(new TodoItem("Incomplete"));
 	}
 }

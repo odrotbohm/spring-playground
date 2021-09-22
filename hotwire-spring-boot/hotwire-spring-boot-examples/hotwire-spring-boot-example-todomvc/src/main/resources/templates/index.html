@@ -6,12 +6,14 @@
 		<title>Template • TodoMVC</title>
 		<link rel="stylesheet" th:href="@{/webjars/todomvc-common/base.css}">
 		<link rel="stylesheet" th:href="@{/webjars/todomvc-app-css/index.css}">
+		<script th:src="@{/webjars/hotwired__turbo/dist/turbo.es5-umd.js}"></script>
+		<script th:src="@{/webjars/todomvc-common/base.js}"></script>
 	</head>
 	<body>
 		<section class="todoapp">
 			<header class="header">
 				<h1>todos</h1>
-				<form th:action="@{/}" method="post" th:object="${item}" data-turbo-frame="todos">
+				<form th:action="@{/}" method="post" th:object="${item}" data-turbo-frame="_top">
 					<input class="new-todo" placeholder="What needs to be done?" th:field="*{title}" autofocus>
 				</form>
 			</header>
@@ -45,27 +47,26 @@
 				</turbo-frame>
 			</section>
 			<!-- This footer should be hidden by default and shown when there are todos -->
-			<turbo-frame id="footer">
-				<footer class="footer" th:if="${todos.size() > 0}">
+			<turbo-frame id="foot" th:fragment="foot">
+				<footer class="footer" th:if="${numberOfTodos > 0}">
 					<!-- This should be `0 items left` by default -->
-					<span class="todo-count"><strong>0</strong> item left</span>
+					<span class="todo-count"><strong th:text="${numberOfIncomplete}">0</strong> item left</span>
 					<!-- Remove this if you don't implement routing -->
 					<ul class="filters">
 						<li>
-							<a class="selected" href="#/">All</a>
+							<a th:class="${filter == '' ? 'selected' : ''}" href="?" data-turbo-frame="_top">All</a>
 						</li>
 						<li>
-							<a href="#/active">Active</a>
+							<a th:class="${filter == 'active' ? 'selected' : ''}" href="?filter=active" data-turbo-frame="_top">Active</a>
 						</li>
 						<li>
-							<a href="#/completed">Completed</a>
+							<a th:class="${filter == 'completed' ? 'selected' : ''}"href="?filter=completed" data-turbo-frame="_top">Completed</a>
 						</li>
 					</ul>
 					<!-- Hidden if no completed items are left ↓ -->
 					<button class="clear-completed">Clear completed</button>
 				</footer>
 			</turbo-frame>
-
 		</section>
 		<footer class="info">
 			<p>Double-click to edit a todo</p>
@@ -75,7 +76,5 @@
 			<p>Created by <a href="http://todomvc.com">you</a></p>
 			<p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
 		</footer>
-		<script th:src="@{/webjars/todomvc-common/base.js}"></script>
-		<script th:src="@{/webjars/hotwired__turbo/dist/turbo.es5-umd.js}"></script>
 	</body>
 </html>

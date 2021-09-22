@@ -1,13 +1,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <!--/*@thymesVar id="item" type="example.todomvc.TodoItemController.TodoItemDto"*/-->
-<li th:fragment="todoItem(item)">
-	<div class="view">
-		<input class="toggle" type="checkbox">
-		<label th:text="${item.title}">Taste JavaScript</label>
-		<button class="destroy"></button>
-	</div>
-	<input class="edit" value="Create a TodoMVC template">
-</li>
+<turbo-frame th:fragment="todoItem(item)" th:attr="id=${'todo-' + item.id}">
+	<li th:class="${item.completed ? 'completed' : ''}">
+		<div class="view">
+			<input class="toggle" type="checkbox"></input>
+			<label th:text="${item.title}">Taste JavaScript</label>
+			<form th:method="delete" th:action="@{/{id}(id=${item.id},filter=${filter})}">
+				<button class="destroy" type="submit"></button>
+			</form>
+		</div>
+		<input class="edit" value="Create a TodoMVC template"></input>
+	</li>
+</turbo-frame>
 
 </html>
