@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.util.StringUtils;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
@@ -51,13 +51,13 @@ class HotwireViewHandlerInterceptor implements HandlerInterceptor {
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
 
-		if (modelAndView == null) {
+		if (modelAndView == null || !HandlerMethod.class.isInstance(handler)) {
 			return;
 		}
 
-		String viewName = modelAndView.getViewName();
+		HandlerMethod method = (HandlerMethod) handler;
 
-		if (StringUtils.hasText(viewName)) {
+		if (!method.getReturnType().getParameterType().equals(TurboStreams.class)) {
 			return;
 		}
 
