@@ -175,7 +175,7 @@ public class TurboStreams {
 		}
 
 		String closeStream() {
-			return "</turbo-stream>";
+			return "</turbo-stream>\n";
 		}
 
 		String openTemplate() {
