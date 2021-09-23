@@ -78,7 +78,7 @@ class TurboTodoController {
 	}
 
 	@PutMapping("/{todo}/toggle")
-	TurboStreams turboToggleCompletino(@PathVariable Todo todo, @RequestParam Optional<String> filter, Model model) {
+	TurboStreams turboToggleCompletion(@PathVariable Todo todo, @RequestParam Optional<String> filter, Model model) {
 
 		todo = template.save(todo.toggleCompletion(), model, filter);
 
