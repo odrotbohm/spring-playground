@@ -5,14 +5,14 @@ import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
 
-class TodoItem {
+public class Todo {
 
 	private @Id UUID id;
 	private String title;
 	private boolean completed;
 	private Instant created;
 
-	TodoItem(String title) {
+	public Todo(String title) {
 
 		this.id = UUID.randomUUID();
 		this.title = title;
@@ -36,9 +36,9 @@ class TodoItem {
 		return created;
 	}
 
-	public TodoItem complete() {
+	public Todo toggleCompletion() {
 
-		this.completed = true;
+		this.completed = !completed;
 
 		return this;
 	}

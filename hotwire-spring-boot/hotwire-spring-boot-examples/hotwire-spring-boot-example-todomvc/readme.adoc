@@ -1,0 +1,25 @@
+= TodoMVC Spring Boot Hotwire demo
+
+This a small sample application that shows the prototype https://hotwire.dev[Hotwire] integration to build the canonical https://todomvc.com[TodoMVC] application using server-side rendering in Spring Boot using Thymeleaf.
+
+== Basics
+
+The example is built with progressive enhancement in mind, and also shows different levels of Hotwire integration.
+The very basic application can be run as follows:
+
+[source]
+----
+$ mvn spring-boot:run
+----
+
+The application is then served from `TodoController` and uses full page requests if JavaScript is disabled in the browser.
+If JavaScript *is* enabled, Hotwire's Turbo Drive will intercept the server interaction and replace the page with the content returned from the server.
+You can see this in your browsers developer tools (for Chrome: note that the Network tab contains individual interaction requests rather than fill plage reloads).
+
+== Turbo streams
+
+If the application is run with the `turbo` profile active (`-Pturbo`), the `TurboTodoController` is registered as well and response to Turbo's requests that ask for `text/vnd.turbo-stream.html` over plain `text/html`.
+The controller methods return Turbo Streams that render Thymeleaf fragments instead of the entire page.
+The `<turbo-stream />` elements returned are then picked up by Turbo running in the browser to update the corresponding parts of the page.
+
+The example uses the Spring Boot Hotwire integration prototype centered around the `TurboStreams` class returned from the `TurboTodoController` that allows to easily assemble streams by pointing to Thymeleaf template fragments.
