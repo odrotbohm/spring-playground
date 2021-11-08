@@ -1,0 +1,18 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+
+
+<li th:fragment="todo(todo)" th:attr="id=${'todo-' + todo.id}" th:class="${todo.completed ? 'completed' : ''}">
+	<div class="view">
+		<form th:method="put" th:action="@{/{id}/toggle(id=${todo.id},filter=${filter})}" hx-swap="none">
+			<input class="toggle" type="checkbox" th:checked="${todo.completed}" onchange="this.form.requestSubmit()"></index>
+			<label th:text="${todo.title}">Taste JavaScript</label>
+		</form>
+		
+		<form th:method="delete" th:action="@{/{id}(id=${todo.id},filter=${filter})}" hx-swap="none">
+			<button class="destroy" type="submit"></button>
+		</form>
+	</div>
+	<input class="edit" value="Create a TodoMVC template"></input>
+</li>
+
+</html>

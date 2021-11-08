@@ -20,6 +20,7 @@
 		<module>modelmapper-spring-data</module>
 		<module>spring-web-tools</module>
 		<module>hotwire-spring-boot</module>
+		<module>htmx-spring-boot</module>
 	</modules>
 
 	<dependencies>

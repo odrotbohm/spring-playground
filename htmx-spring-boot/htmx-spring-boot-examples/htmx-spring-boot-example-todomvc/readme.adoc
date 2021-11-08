@@ -1,0 +1,23 @@
+= TodoMVC Spring Boot HTMX demo
+
+This is a small sample application that shows the prototype https://htmx.org[HTMX] integration to build the canonical https://todomvc.com[TodoMVC] application using server-side rendering in Spring Boot using Thymeleaf.
+
+== Basics
+
+The example is built with progressive enhancement in mind, and also shows different levels of HTMX integration.
+The very basic application can be run as follows:
+
+[source]
+----
+$ mvn spring-boot:run
+----
+
+The application is then served from `TodoController` and uses full page requests if JavaScript is disabled in the browser.
+If JavaScript *is* enabled, the `hx-boost="true"` attribute on the `<body />` tag will intercept the server interaction and replace the page with the content returned from the server.
+You can see this in your browsers developer tools (for Chrome: note that the Network tab contains individual interaction requests rather than full page reloads).
+
+== HTMX partials
+
+If the application is run with the `htmx` profile active (`-Phtmx`), the `HtmxTodoController` is registered as well and responds to HTMX's requests (identified via the `HX-Request=true` request header, mapped via `@HtmxController`).
+The controller methods return `HtmxPartials` that render Thymeleaf fragments instead of the entire page.
+The individually returned `<div />` elements returned are then picked up by HTMX running in the browser to update the corresponding parts of the page.

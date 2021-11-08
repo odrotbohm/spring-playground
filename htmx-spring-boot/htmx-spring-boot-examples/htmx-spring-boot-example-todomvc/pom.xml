@@ -5,12 +5,12 @@
 
 	<parent>
 		<groupId>de.odrotbohm.playground</groupId>
-		<artifactId>hotwire-spring-boot-examples</artifactId>
+		<artifactId>htmx-spring-boot-examples</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<name>Hotwire Spring Boot - TodoMVC Example</name>
-	<artifactId>hotwire-spring-boot-example-todomvc</artifactId>
+	<name>HTMX Spring Boot - TodoMVC Example</name>
+	<artifactId>htmx-spring-boot-example-todomvc</artifactId>
 
 	<properties>
 		<java.version>17</java.version>
@@ -18,9 +18,9 @@
 
 	<profiles>
 		<profile>
-			<id>turbo</id>
+			<id>htmx</id>
 			<properties>
-				<spring.profiles.active>turbo</spring.profiles.active>
+				<spring.profiles.active>htmx</spring.profiles.active>
 			</properties>
 		</profile>
 	</profiles>
@@ -44,7 +44,7 @@
 		</dependency>
 		<dependency>
 			<groupId>de.odrotbohm.playground</groupId>
-			<artifactId>hotwire-spring-boot</artifactId>
+			<artifactId>htmx-spring-boot</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 

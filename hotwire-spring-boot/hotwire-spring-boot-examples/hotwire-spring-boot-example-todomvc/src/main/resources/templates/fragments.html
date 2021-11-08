@@ -11,6 +11,7 @@
 			<form th:method="delete" th:action="@{/{id}(id=${todo.id},filter=${filter})}">
 				<button class="destroy" type="submit"></button>
 			</form>
+			<a hx-get="/foo">Test</a>
 		</div>
 		<input class="edit" value="Create a TodoMVC template"></input>
 	</li>

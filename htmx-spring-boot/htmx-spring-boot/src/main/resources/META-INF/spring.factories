@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+de.odrotbohm.spring.htmx.webmvc.autoconfigure.HtmxWebMvcAutoConfiguration
