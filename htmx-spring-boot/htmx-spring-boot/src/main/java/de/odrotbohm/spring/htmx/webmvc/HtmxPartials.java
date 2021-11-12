@@ -33,7 +33,7 @@ import org.springframework.util.Assert;
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 public class HtmxPartials {
 
-	private final Collection<TurboStream> streams;
+	private final Collection<Partial> streams;
 
 	public HtmxPartials() {
 		this.streams = new ArrayList<>();
@@ -90,7 +90,7 @@ public class HtmxPartials {
 		return new HtmxPartialsBuilder(streams, target, Action.UPDATE);
 	}
 
-	Iterable<TurboStream> toIterable() {
+	Iterable<Partial> toIterable() {
 		return () -> streams.iterator();
 	}
 
@@ -121,7 +121,7 @@ public class HtmxPartials {
 	@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 	public static class HtmxPartialsBuilder {
 
-		private Collection<TurboStream> streams;
+		private Collection<Partial> streams;
 		private String target;
 		private Action action;
 
@@ -130,7 +130,7 @@ public class HtmxPartials {
 		 * @return will never be {@literal null}.
 		 */
 		public HtmxPartials with(String templateOrFragment) {
-			return and(new TurboStream(action, target, templateOrFragment));
+			return and(new Partial(action, target, templateOrFragment));
 		}
 
 		/**
@@ -143,7 +143,7 @@ public class HtmxPartials {
 
 			Assert.hasText(template, "Template name must not be null or empty!");
 
-			return and(new TurboStream(action, target, template.concat(" :: ".concat(target))));
+			return and(new Partial(action, target, template.concat(" :: ".concat(target))));
 		}
 
 		/**
@@ -157,12 +157,12 @@ public class HtmxPartials {
 			Assert.hasText(fragment, "Fragment must not be null or empty!");
 			Assert.isTrue(fragment.contains("::"), () -> "Invalid fragment identifier " + fragment + "!");
 
-			return and(new TurboStream(action, target, fragment));
+			return and(new Partial(action, target, fragment));
 		}
 
-		private HtmxPartials and(TurboStream stream) {
+		private HtmxPartials and(Partial stream) {
 
-			List<TurboStream> list = new ArrayList<>(streams);
+			List<Partial> list = new ArrayList<>(streams);
 			list.add(stream);
 
 			return new HtmxPartials(list);
@@ -170,7 +170,7 @@ public class HtmxPartials {
 	}
 
 	@Value
-	static class TurboStream {
+	static class Partial {
 
 		Action action;
 		String target, template;

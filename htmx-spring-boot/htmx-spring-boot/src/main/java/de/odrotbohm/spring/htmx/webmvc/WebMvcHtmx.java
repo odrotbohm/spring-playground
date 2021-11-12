@@ -15,7 +15,7 @@
  */
 package de.odrotbohm.spring.htmx.webmvc;
 
-import de.odrotbohm.spring.htmx.webmvc.HtmxPartials.TurboStream;
+import de.odrotbohm.spring.htmx.webmvc.HtmxPartials.Partial;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -67,7 +67,7 @@ public class WebMvcHtmx implements Htmx {
 			Locale locale = locales.resolveLocale(request);
 			PrintWriter writer = response.getWriter();
 
-			for (TurboStream it : streams.toIterable()) {
+			for (Partial it : streams.toIterable()) {
 
 				writer.write(it.openWrapper());
 
@@ -92,7 +92,7 @@ public class WebMvcHtmx implements Htmx {
 
 		StringBuilder builder = new StringBuilder();
 
-		for (TurboStream it : streams.toIterable()) {
+		for (Partial it : streams.toIterable()) {
 
 			builder.append(it.openWrapper());
 
