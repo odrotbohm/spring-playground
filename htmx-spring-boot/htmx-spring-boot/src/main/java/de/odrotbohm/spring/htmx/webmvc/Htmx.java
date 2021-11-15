@@ -20,7 +20,7 @@ import java.util.Map;
 import org.springframework.web.servlet.View;
 
 /**
- * API to conveniently create and render Hotwire {@link HtmxPartials}.
+ * API to conveniently create and render HTMX {@link HtmxPartials}.
  *
  * @author Oliver Drotbohm
  */
