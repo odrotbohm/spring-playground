@@ -35,7 +35,7 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 
 /**
- * API to conveniently build Hotwire streams.
+ * API to conveniently build SSE streams.
  *
  * @author Oliver Drotbohm
  */
