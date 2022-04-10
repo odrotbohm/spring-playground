@@ -544,11 +544,11 @@ public interface MappedPayloads {
 		 * @param finalizer must not be {@literal null}.
 		 * @return
 		 */
-		public HttpEntity<?> concludeIfValid(Function<? super T, ? extends ResponseEntity<?>> finalizer) {
+		public <S, R extends ResponseEntity<? extends S>> R concludeIfValid(Function<? super T, R> finalizer) {
 
 			Assert.notNull(finalizer, "Finalizer must not be null!");
 
-			return errorsOrNone().orElseGet(() -> finalizer.apply(payload));
+			return (R) errorsOrNone().orElseGet(() -> finalizer.apply(payload));
 		}
 
 		/**
