@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 the original author or authors.
+ * Copyright 2020-2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -395,8 +395,8 @@ public interface MappedPayloads {
 		}
 
 		/**
-		 * Syntactic sugar to invoke validations in a readable way. Essentially the same as {@link #peek(BiConsumer)}.
-		 * Easy to use with Spring's own {@link Validator} interface or the YAVI {@link YaviValidator} adapter.
+		 * Syntactic sugar to invoke validations in a readable way. Essentially the same as {@link #peek(BiConsumer)}. Easy
+		 * to use with Spring's own {@link Validator} interface or the YAVI {@link YaviValidator} adapter.
 		 *
 		 * @param validator must not be {@literal null}.
 		 * @return
@@ -544,6 +544,7 @@ public interface MappedPayloads {
 		 * @param finalizer must not be {@literal null}.
 		 * @return
 		 */
+		@SuppressWarnings("unchecked")
 		public <S, R extends ResponseEntity<? extends S>> R concludeIfValid(Function<? super T, R> finalizer) {
 
 			Assert.notNull(finalizer, "Finalizer must not be null!");
