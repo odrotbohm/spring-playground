@@ -33,7 +33,7 @@
 		<dependency>
 			<groupId>am.ik.yavi</groupId>
 			<artifactId>yavi</artifactId>
-			<version>0.4.1</version>
+			<version>0.11.3</version>
 			<optional>true</optional>
 		</dependency>
 
