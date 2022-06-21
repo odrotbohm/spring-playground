@@ -17,8 +17,22 @@
 
 	<modules>
 		<module>htmx-spring-boot</module>
-		<module>htmx-spring-boot-examples</module>
 	</modules>
+
+	<profiles>
+		<profile>
+			<id>with-examples</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<modules>
+				<module>htmx-spring-boot-examples</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>sonatype</id>
+		</profile>
+	</profiles>
 
 	<dependencies>
 

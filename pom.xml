@@ -31,7 +31,16 @@
 
 	<profiles>
 		<profile>
+			<id>with-examples</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
 			<id>sonatype</id>
+			<properties>
+				<skipTests>true</skipTests>
+			</properties>
 			<build>
 				<plugins>
 					<plugin>
