@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>de.odrotbohm.playground</groupId>
 		<artifactId>htmx-spring-boot-examples</artifactId>
-		<version>0.2.0</version>
+		<version>0.3.0-SNAPSHOT</version>
 	</parent>
 
 	<name>HTMX Spring Boot - TodoMVC Example</name>
