@@ -3,7 +3,7 @@
 
 	<groupId>de.odrotbohm.playground</groupId>
 	<artifactId>spring-playground</artifactId>
-	<version>0.2.0-SNAPSHOT</version>
+	<version>0.2.0</version>
 	<packaging>pom</packaging>
 
 	<parent>
@@ -157,7 +157,7 @@
 		<url>https://github.com/odrotbohmm/spring-playground</url>
 		<connection>scm:git:https://github.com/odrotbohmm/spring-playground</connection>
 		<developerConnection>scm:git:ssh://git@github.com/odrotbohmm/spring-playground.git</developerConnection>
-		<tag>HEAD</tag>
+		<tag>0.2.0</tag>
 	</scm>
 
 </project>
