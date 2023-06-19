@@ -50,7 +50,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
  */
 @WebMvcTest
 @ImportAutoConfiguration(TestMappedPayloadAutoConfiguration.class)
-public class MappedPayloadHandlerMethodArgumentResolverIntegrationTests {
+class MappedPayloadHandlerMethodArgumentResolverIntegrationTests {
 
 	@Autowired MockMvc mvc;
 	@Autowired RequestMappingHandlerAdapter adapter;

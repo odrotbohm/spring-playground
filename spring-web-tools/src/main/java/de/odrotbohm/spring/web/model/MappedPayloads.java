@@ -396,10 +396,12 @@ public interface MappedPayloads {
 
 		/**
 		 * Syntactic sugar to invoke validations in a readable way. Essentially the same as {@link #peek(BiConsumer)}. Easy
-		 * to use with Spring's own {@link Validator} interface or the YAVI {@link YaviValidator} adapter.
+		 * to use with the YAVI {@link YaviValidator} adapter. For use with Spring's {@link Validator} interface, see
+		 * {@link #validate(Validator)}.
 		 *
 		 * @param validator must not be {@literal null}.
 		 * @return
+		 * @see #validate(Validator)
 		 */
 		public MappedPayload<T> validate(BiConsumer<? super T, Errors> validator) {
 
@@ -410,6 +412,21 @@ public interface MappedPayloads {
 			}
 
 			return this;
+		}
+
+		/**
+		 * Syntactic sugar to invoke validations in a readable way. Essentially the same as {@link #peek(BiConsumer)}. Easy
+		 * to use with Spring's own {@link Validator} interface.
+		 *
+		 * @param validator must not be {@literal null}.
+		 * @return
+		 * @see #validate(BiConsumer)
+		 */
+		public MappedPayload<T> validate(Validator validator) {
+
+			Assert.notNull(validator, "Validator must not be null!");
+
+			return validate(validator::validate);
 		}
 
 		/**
