@@ -17,12 +17,11 @@ package example.todomvc.web;
 
 import example.todomvc.Todo;
 import example.todomvc.Todos;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
 import java.util.UUID;
-
-import javax.validation.constraints.NotBlank;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.TypedSort;

@@ -19,11 +19,10 @@ import de.odrotbohm.spring.hotwire.webmvc.Hotwire;
 import de.odrotbohm.spring.hotwire.webmvc.TurboStreams;
 import example.todomvc.Todo;
 import example.todomvc.web.TemplateModel.TodoForm;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
-
-import javax.validation.Valid;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;

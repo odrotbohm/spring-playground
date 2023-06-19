@@ -17,17 +17,16 @@ package de.odrotbohm.spring.hotwire.webmvc.autoconfigure;
 
 import de.odrotbohm.spring.hotwire.webmvc.TurboStreams;
 import de.odrotbohm.spring.hotwire.webmvc.WebMvcHotwire;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
-import org.thymeleaf.spring5.SpringTemplateEngine;
-import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 
 /**
  * A {@link HandlerInterceptor} that turns {@link TurboStreams} instances returned from controller methods into a

@@ -30,9 +30,9 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.View;
 import org.thymeleaf.TemplateSpec;
 import org.thymeleaf.context.Context;
-import org.thymeleaf.spring5.SpringTemplateEngine;
-import org.thymeleaf.spring5.view.ThymeleafView;
-import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+import org.thymeleaf.spring6.view.ThymeleafView;
+import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
 
 /**

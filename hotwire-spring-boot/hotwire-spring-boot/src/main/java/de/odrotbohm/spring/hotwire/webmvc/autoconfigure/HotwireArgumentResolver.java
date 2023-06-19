@@ -26,8 +26,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.servlet.LocaleResolver;
-import org.thymeleaf.spring5.SpringTemplateEngine;
-import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 
 /**
  * @author Oliver Drotbohm

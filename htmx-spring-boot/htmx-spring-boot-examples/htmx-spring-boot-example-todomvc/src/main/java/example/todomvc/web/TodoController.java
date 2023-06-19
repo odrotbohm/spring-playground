@@ -2,11 +2,10 @@ package example.todomvc.web;
 
 import example.todomvc.Todo;
 import example.todomvc.web.TemplateModel.TodoForm;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
-
-import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;

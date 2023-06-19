@@ -25,8 +25,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.thymeleaf.spring5.SpringTemplateEngine;
-import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 
 /**
  * @author Oliver Drotbohm
