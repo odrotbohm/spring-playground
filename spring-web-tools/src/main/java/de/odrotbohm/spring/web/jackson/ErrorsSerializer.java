@@ -16,8 +16,11 @@
 package de.odrotbohm.spring.web.jackson;
 
 import lombok.RequiredArgsConstructor;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ser.std.StdSerializer;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -26,9 +29,6 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.FieldError;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 /**
  * A Jackson serializer that translates an {@link Errors} instance into a {@link Map} keyed by field and the
@@ -38,22 +38,19 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
  */
 public class ErrorsSerializer extends StdSerializer<Errors> {
 
-	private static final long serialVersionUID = 9136141790232694091L;
-
 	ErrorsSerializer() {
 		super(Errors.class);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.fasterxml.jackson.databind.ser.std.StdSerializer#serialize(java.lang.Object, com.fasterxml.jackson.core.JsonGenerator, com.fasterxml.jackson.databind.SerializerProvider)
+	 * @see tools.jackson.databind.ser.std.StdSerializer#serialize(java.lang.Object, tools.jackson.core.JsonGenerator, tools.jackson.databind.SerializationContext)
 	 */
 	@Override
-	@SuppressWarnings("null")
-	public void serialize(Errors value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+	public void serialize(Errors value, JsonGenerator gen, SerializationContext context) throws JacksonException {
 
-		provider.findValueSerializer(ErrorsJson.class)
-				.serialize(new ErrorsJson(value), gen, provider);
+		context.findValueSerializer(ErrorsJson.class)
+				.serialize(new ErrorsJson(value), gen, context);
 	}
 
 	@RequiredArgsConstructor

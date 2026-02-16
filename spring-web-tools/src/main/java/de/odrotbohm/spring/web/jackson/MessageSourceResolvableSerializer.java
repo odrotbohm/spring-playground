@@ -15,14 +15,13 @@
  */
 package de.odrotbohm.spring.web.jackson;
 
-import java.io.IOException;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ser.std.StdSerializer;
 
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.support.MessageSourceAccessor;
-
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 /**
  * A Jackson serializer triggering message resolution via a {@link MessageSourceAccessor} for
@@ -50,12 +49,12 @@ class MessageSourceResolvableSerializer extends StdSerializer<MessageSourceResol
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.fasterxml.jackson.databind.ser.std.StdSerializer#serialize(java.lang.Object, com.fasterxml.jackson.core.JsonGenerator, com.fasterxml.jackson.databind.SerializerProvider)
+	 * @see tools.jackson.databind.ser.std.StdSerializer#serialize(java.lang.Object, tools.jackson.core.JsonGenerator, tools.jackson.databind.SerializationContext)
 	 */
 	@Override
-	@SuppressWarnings("null")
-	public void serialize(MessageSourceResolvable value, JsonGenerator gen, SerializerProvider provider)
-			throws IOException {
+	public void serialize(MessageSourceResolvable value, JsonGenerator gen, SerializationContext provider)
+			throws JacksonException {
+
 		gen.writeString(accessor.getMessage(value));
 	}
 }

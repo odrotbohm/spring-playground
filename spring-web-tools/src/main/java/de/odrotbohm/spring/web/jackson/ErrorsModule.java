@@ -15,10 +15,10 @@
  */
 package de.odrotbohm.spring.web.jackson;
 
+import tools.jackson.databind.module.SimpleModule;
+
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.MessageSourceAccessor;
-
-import com.fasterxml.jackson.databind.module.SimpleModule;
 
 /**
  * @author Oliver Drotbohm

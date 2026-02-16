@@ -22,6 +22,7 @@ import static org.mockito.Mockito.*;
 import de.odrotbohm.spring.web.jackson.ErrorsSerializer.ErrorsJson;
 import de.odrotbohm.spring.web.model.ErrorsWithDetails;
 import de.odrotbohm.spring.web.model.I18nedMessage;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,7 +33,6 @@ import org.springframework.validation.MapBindingResult;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
@@ -43,15 +43,16 @@ class JacksonWebIntegrationTests {
 
 	private static final String I18NED_PATTERN_CITY = "Bitte geben Sie eine gültige Stadt an!";
 
-	private final ObjectMapper jackson;
+	private final JsonMapper jackson;
 
 	JacksonWebIntegrationTests() {
 
 		MessageSource mock = mock(MessageSource.class);
 		when(mock.getMessage(any(), any())).thenReturn(I18NED_PATTERN_CITY);
 
-		this.jackson = new ObjectMapper();
-		this.jackson.registerModule(new ErrorsModule(mock));
+		this.jackson = JsonMapper.builder()
+				.addModule(new ErrorsModule(mock))
+				.build();
 	}
 
 	@Test // CORE-442
