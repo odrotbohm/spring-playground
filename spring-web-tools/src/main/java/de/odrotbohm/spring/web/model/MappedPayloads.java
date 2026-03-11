@@ -15,11 +15,12 @@
  */
 package de.odrotbohm.spring.web.model;
 
-import de.odrotbohm.spring.web.validation.YaviValidator;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -27,12 +28,12 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.CheckReturnValue;
 import org.springframework.util.Assert;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -42,6 +43,7 @@ import org.springframework.validation.Validator;
  *
  * @author Oliver Drotbohm
  */
+@CheckReturnValue
 public interface MappedPayloads {
 
 	/**
@@ -51,7 +53,7 @@ public interface MappedPayloads {
 	 * @return will never be {@literal null}.
 	 */
 	public static MappedErrors of(Errors errors) {
-		return new MappedErrors(errors, MappedPayloads::toBadRequest);
+		return new MappedErrors(errors);
 	}
 
 	/**
@@ -96,11 +98,22 @@ public interface MappedPayloads {
 		return of(errors).toBadRequest();
 	}
 
+	@CheckReturnValue
 	@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 	public static class MappedErrors {
 
 		private final @NonNull Errors errors;
+		private final Map<String, Object> details;
 		protected final Function<Errors, ResponseEntity<?>> onErrors;
+		private final BiConsumer<Errors, ProblemDetail> customizer;
+
+		private MappedErrors(Errors errors) {
+
+			this.errors = errors;
+			this.details = new LinkedHashMap<>();
+			this.onErrors = MappedPayloads::toBadRequest;
+			this.customizer = (err, details) -> {};
+		}
 
 		/**
 		 * Creates a new {@link MappedPayload} with the given payload and the current {@link Errors} instance.
@@ -124,6 +137,21 @@ public interface MappedPayloads {
 			Assert.notNull(errors, "Errors handler must not be null!");
 
 			errors.accept(this.errors);
+
+			return this;
+		}
+
+		public MappedErrors reject(Consumer<Map<String, Object>> details) {
+
+			details.accept(this.details);
+
+			return this;
+		}
+
+		public MappedErrors reject(String errorCode, Consumer<Map<String, Object>> details) {
+
+			errors.reject(errorCode);
+			details.accept(this.details);
 
 			return this;
 		}
@@ -210,7 +238,13 @@ public interface MappedPayloads {
 		 * @return will never be {@literal null}.
 		 */
 		public ResponseEntity<?> toBadRequest() {
-			return ResponseEntity.badRequest().body(errors);
+
+			var details = ProblemDetailsWithErrors.of(errors);
+			details.setProperties(this.details);
+
+			customizer.accept(errors, details);
+
+			return ResponseEntity.badRequest().body(details);
 		}
 
 		/**
@@ -234,11 +268,12 @@ public interface MappedPayloads {
 		 * @param callback must not be {@literal null}.
 		 * @return
 		 */
+		@CheckReturnValue
 		public MappedErrors onErrors(Function<Errors, ResponseEntity<?>> callback) {
 
 			Assert.notNull(callback, "Callback must not be null!");
 
-			return new MappedErrors(errors, callback);
+			return new MappedErrors(errors, details, callback, customizer);
 		}
 
 		public MappedErrors onErrors(Supplier<ResponseEntity<?>> callback) {
@@ -246,6 +281,19 @@ public interface MappedPayloads {
 			Assert.notNull(callback, "Callback must not be null!");
 
 			return onErrors(__ -> callback.get());
+		}
+
+		/**
+		 * Customize the given {@link ProblemDetail} instance based on the ultimate {@link Errors} instance.
+		 *
+		 * @param customizer must not be {@literal null}.
+		 * @return will never be {@literal null}.
+		 */
+		public MappedErrors onErrors(BiConsumer<Errors, ProblemDetail> customizer) {
+
+			Assert.notNull(customizer, "Customizer must not be null!");
+
+			return new MappedErrors(errors, details, onErrors, customizer);
 		}
 
 		protected Optional<ResponseEntity<?>> errorsOrNone() {
@@ -262,6 +310,7 @@ public interface MappedPayloads {
 	 *
 	 * @author Oliver Drotbohm
 	 */
+	@CheckReturnValue
 	public static class MappedPayload<T> extends MappedErrors {
 
 		private final Errors errors;
@@ -299,7 +348,7 @@ public interface MappedPayloads {
 				Function<Errors, ResponseEntity<?>> onErrors,
 				Supplier<ResponseEntity<?>> onAbsence) {
 
-			super(errors, onErrors);
+			super(errors, new LinkedHashMap<>(), onErrors, (err, details) -> {});
 
 			Assert.notNull(onAbsence, "Absence callback must not be null!");
 

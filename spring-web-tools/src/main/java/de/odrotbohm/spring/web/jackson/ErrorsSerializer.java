@@ -53,6 +53,15 @@ public class ErrorsSerializer extends StdSerializer<Errors> {
 				.serialize(new ErrorsJson(value), gen, context);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see tools.jackson.databind.ValueSerializer#isEmpty(tools.jackson.databind.SerializationContext, java.lang.Object)
+	 */
+	@Override
+	public boolean isEmpty(SerializationContext ctxt, Errors value) {
+		return value.getFieldErrors().isEmpty();
+	}
+
 	@RequiredArgsConstructor
 	static class ErrorsJson {
 

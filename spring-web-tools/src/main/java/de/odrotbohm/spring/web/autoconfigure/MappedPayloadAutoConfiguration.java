@@ -22,8 +22,8 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
@@ -31,7 +31,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 /**
  * @author Oliver Drotbohm
  */
-@Configuration(proxyBeanMethods = false)
+@AutoConfiguration
 @RequiredArgsConstructor
 @EnableConfigurationProperties(MappedPayloadProperties.class)
 class MappedPayloadAutoConfiguration implements WebMvcConfigurer {
@@ -45,6 +45,6 @@ class MappedPayloadAutoConfiguration implements WebMvcConfigurer {
 	 */
 	@Override
 	public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-		resolvers.add(0, new MappedPayloadHandlerMethodArgumentResolver(() -> adapter.getObject(), configuration));
+		resolvers.add(new MappedPayloadHandlerMethodArgumentResolver(() -> adapter.getObject(), configuration));
 	}
 }

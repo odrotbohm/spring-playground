@@ -31,8 +31,6 @@ import org.springframework.context.support.MessageSourceAccessor;
  */
 class MessageSourceResolvableSerializer extends StdSerializer<MessageSourceResolvable> {
 
-	private static final long serialVersionUID = 4302540100251549622L;
-
 	private final MessageSourceAccessor accessor;
 
 	/**

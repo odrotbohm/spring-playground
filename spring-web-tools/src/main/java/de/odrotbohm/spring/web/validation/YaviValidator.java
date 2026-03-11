@@ -16,7 +16,6 @@
 package de.odrotbohm.spring.web.validation;
 
 import am.ik.yavi.core.Validator;
-import de.odrotbohm.spring.web.model.MappedPayloads.MappedPayload;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Delegate;
 
@@ -25,8 +24,9 @@ import java.util.function.BiConsumer;
 import org.springframework.validation.Errors;
 
 /**
- * A delegate for a YAVI {@link Validator} that can also be handed into {@link MappedPayload#validate(BiConsumer)} right
- * away to trigger validation
+ * A delegate for a YAVI {@link Validator} that can also be handed into
+ * {@link de.odrotbohm.spring.web.model.MappedPayloads.MappedPayload#validate(BiConsumer)} right away to trigger
+ * validation.
  *
  * @author Oliver Drotbohm
  */

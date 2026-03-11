@@ -22,6 +22,7 @@ import static org.mockito.Mockito.*;
 import de.odrotbohm.spring.web.jackson.ErrorsSerializer.ErrorsJson;
 import de.odrotbohm.spring.web.model.ErrorsWithDetails;
 import de.odrotbohm.spring.web.model.I18nedMessage;
+import de.odrotbohm.spring.web.model.MappedPayloads;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.util.Collections;
@@ -29,6 +30,8 @@ import java.util.HashMap;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.context.MessageSource;
+import org.springframework.http.ProblemDetail;
+import org.springframework.http.converter.json.ProblemDetailJacksonMixin;
 import org.springframework.validation.MapBindingResult;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -52,6 +55,7 @@ class JacksonWebIntegrationTests {
 
 		this.jackson = JsonMapper.builder()
 				.addModule(new ErrorsModule(mock))
+				.addMixIn(ProblemDetail.class, ProblemDetailJacksonMixin.class)
 				.build();
 	}
 
@@ -106,6 +110,23 @@ class JacksonWebIntegrationTests {
 		String rendered = jackson.writeValueAsString(errors);
 
 		assertThat(JsonPath.parse(rendered).read("$.field.key", String.class)).isEqualTo(I18NED_PATTERN_CITY);
+	}
+
+	@Test
+	void rendersNestedAndTopLevelErrors() {
+
+		var result = new MapBindingResult(Collections.emptyMap(), "test");
+		result.rejectValue("field", "Pattern.city");
+
+		var details = MappedPayloads.of(result)
+				.onErrors((__, it) -> it.setProperty("topLevel", "value"))
+				.toBadRequest()
+				.getBody();
+
+		var document = JsonPath.parse(jackson.writeValueAsString(details));
+
+		assertThat(document.read("$.topLevel", String.class)).isEqualTo("value");
+		assertThat(document.read("$.errors.field", String.class)).isNotNull();
 	}
 
 	@JsonAutoDetect(fieldVisibility = Visibility.ANY)

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 the original author or authors.
+ * Copyright 2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,24 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.odrotbohm.spring.web.mvc;
+package de.odrotbohm.spring.web.autoconfigure;
 
-import lombok.Value;
+import de.odrotbohm.spring.web.jackson.ErrorsModule;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Bean;
 
 /**
- * Configuration properties for the handling of {@link de.odrotbohm.spring.web.model.MappedPayloads.MappedPayload}
- * binding.
- *
  * @author Oliver Drotbohm
  */
-@Value
-@ConfigurationProperties(prefix = "playground.mapped-payload")
-public class MappedPayloadProperties {
+@AutoConfiguration
+class ErrorsModuleAutoConfiguration {
 
-	/**
-	 * Whether to always validate the payload. Defaults to {@literal true}.
-	 */
-	boolean alwaysValidate = true;
+	@Bean
+	ErrorsModule jacksonErrorsModule(MessageSource messageSource) {
+		return new ErrorsModule(messageSource);
+	}
 }

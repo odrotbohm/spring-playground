@@ -40,6 +40,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
@@ -334,6 +335,19 @@ class MappedPayloadsUnitTests {
 		verify(errorHandler, times(1)).apply(captor.capture());
 
 		assertThat(captor.getValue().hasFieldErrors("someField")).isTrue();
+	}
+
+	@Test
+	void createsProblemDetailsForGlobalRejects() {
+
+		var result = createPayload(new Object())
+				.reject(it -> {
+					it.put("someField", "someMessage");
+				}).toBadRequest();
+
+		assertThat(result.getBody()).isInstanceOfSatisfying(ProblemDetail.class, it -> {
+			assertThat(it.getProperties()).containsEntry("someField", "someMessage");
+		});
 	}
 
 	@Value(staticConstructor = "of")
