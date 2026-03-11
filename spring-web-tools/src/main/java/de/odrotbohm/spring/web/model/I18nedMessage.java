@@ -23,8 +23,8 @@ import lombok.With;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.context.MessageSourceResolvable;
-import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
@@ -39,21 +39,16 @@ import org.springframework.util.Assert;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class I18nedMessage implements MessageSourceResolvable {
 
-	@With
-	@Nullable
-	@Getter //
+	@With @Nullable @Getter //
 	private final String[] codes;
 
-	@Nullable
-	@Getter //
+	@Nullable @Getter //
 	private final Object[] arguments;
 
 	/**
 	 * This text is used if the codes can't resolved.
 	 */
-	@With
-	@Nullable
-	@Getter //
+	@With @Nullable @Getter //
 	private final String defaultMessage;
 
 	/**
